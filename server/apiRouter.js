@@ -28,16 +28,9 @@ apiRouter.post('/personality', (req, res) => {
   sendTweetsFromUser(res, req.body.text);
 });
 
-apiRouter.post('/test', (req, res) => {
-  console.log(req.body);
-  res.send({
-    text: req.body.text + '!'
-  });
-});
-
-apiRouter.post('/personality', (req, res) => {
-  sendPersonality(req.body.text, res);
-});
+// apiRouter.post('/personality', (req, res) => {
+//   sendPersonality(req.body.text, res);
+// });
 
 const sendTweetsFromUser = (res, user) => {
   client.get(
