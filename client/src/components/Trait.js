@@ -1,4 +1,5 @@
 import React from 'react';
+import TraitList from './TraitList';
 
 const Trait = ({ name, percentile, subTraits }) => (
   <div>
