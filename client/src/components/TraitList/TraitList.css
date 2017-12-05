@@ -1,0 +1,33 @@
+.TraitList-container {
+  color: #dadada;
+  background-color: #394366;
+  border-radius: 5px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  box-sizing: border-box;
+}
+
+.TraitList-title {
+  font-size: 20px;
+}
+
+.TraitList-traitContainer {
+  color: #abb4d0;
+}
+
+.TraitList-percentBar {
+  width: 70%;
+  margin: 0 auto;
+  height: 10px;
+  border-bottom: 1px solid #abb4d0;
+  position: relative;
+}
+
+.TraitList-percentBall {
+  height: 9px;
+  width: 9px;
+  border-radius: 50%;
+  background-color: #dadada;
+  position: absolute;
+  bottom: -5px;
+}

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import logo from '../logo.svg';
+import icon from '../icon.svg';
 import loading from '../loading.svg';
 import '../App.css';
 import { getTwitterPersonality } from '../utils/apiCalls';
-import UserInputForm from '../components/UserInputForm';
+import UserInputForm from '../components/UserInputForm/index.js';
 import Personality from '../components/Personality';
 
 class App extends Component {
@@ -41,15 +41,16 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <img src={loading} />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <UserInputForm
-          name='Get Twitter Personality'
-          onSubmit={this.onTwitterSubmit}
-        />
+        <div className="App-introContainer">
+          <img src={icon} />
+          <p className="App-title">Personality.ai</p>
+          <p className="App-subTitle">Powered by IBM Watson</p>
+          <UserInputForm
+            name='Enter username of Twitter accout you want to analyze:'
+            placeholder='Enter username of Twitter accout you want to analyze'
+            onSubmit={this.onTwitterSubmit}
+          />
+        </div>
         {this.state.currentState === this.stateNames.LOADING &&
           <img src={loading} alt="loading" />
         }

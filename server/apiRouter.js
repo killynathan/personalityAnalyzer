@@ -5,7 +5,9 @@ const constants = require('./constants');
 const utils = require('./utils');
 
 let apiRouter = express.Router();
-apiRouter.use(express.urlencoded());
+apiRouter.use(express.urlencoded({
+  extended: false
+}));
 apiRouter.use(express.json());
 apiRouter.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
