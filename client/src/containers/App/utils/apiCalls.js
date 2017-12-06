@@ -6,7 +6,7 @@ export const getTwitterPersonality = (username, onComplete) => {
     }),
     body: `text=${username}`
   };
-  return fetch('http://localhost:8000/api/personality', myParams)
+  return fetch('/api/personality', myParams)
     .then(res => {
       return res.json();
     })
