@@ -5,11 +5,13 @@
   height: 100vh;
   overflow: auto;
   box-sizing: border-box;
+  padding-bottom: 40px;
+  color: #dadada;
 }
 
 .App-introContainer {
-  margin-bottom: 70px;
-  margin-top: 30vh;
+  margin-bottom: 100px;
+  margin-top: 35vh;
 }
 
 .App-title {

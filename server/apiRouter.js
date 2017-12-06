@@ -42,7 +42,12 @@ const sendTweetsFromUser = (res, user) => {
       include_rts: false
     },
     (err, tweets, response) => {
-      if (err) console.log(`error: ${err}`);
+      if (err) {
+        console.log(`error: ${JSON.stringify(err)}`);
+        res.send({
+          error: "User not found"
+        });
+      }
       else {
         let tweetsResult = tweets;
         let lastId = tweetsResult[tweetsResult.length-1].id;
