@@ -28,3 +28,23 @@
   left: 10px;
   top: 7px;
 }
+
+.UserInputForm-select {
+  position: absolute;
+  right: 10px;
+  top: 9px;
+  background-color: inherit;
+  border: none;
+  font-size: 11px;
+}
+
+.UserInputForm-select:focus {
+  outline: none;
+}
+
+.UserInputForm-option {
+  color: #abb4d0;
+  background-color: #394366;
+  border: 0px;
+  outline: 0px;
+}

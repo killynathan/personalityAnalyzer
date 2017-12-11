@@ -10,8 +10,11 @@
 }
 
 .App-introContainer {
+  width: 400px;
+  margin-left: auto;
+  margin-right: auto;
   margin-bottom: 100px;
-  margin-top: 35vh;
+  margin-top: 30vh;
 }
 
 .App-title {

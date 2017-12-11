@@ -1,6 +1,7 @@
 const express = require('express');
 const PersonalityInsightsV3 = require('watson-developer-cloud/personality-insights/v3');
 const Twitter = require('twitter');
+const axios = require('axios');
 const constants = require('./constants');
 const utils = require('./utils');
 
@@ -26,13 +27,66 @@ const client = new Twitter({
   bearer_token: constants.TWITTER_BEARER_TOKEN
 });
 
-apiRouter.post('/personality', (req, res) => {
-  sendTweetsFromUser(res, req.body.text);
+apiRouter.get('/twitter/:username', (req, res) => {
+  // sendTweetsFromUser(res, req.params.username);
+  getTweetsFromUser(res, req.params.username, [], null, 10);
 });
 
-// apiRouter.post('/personality', (req, res) => {
-//   sendPersonality(req.body.text, res);
-// });
+apiRouter.get('/reddit/:username', (req, res) => {
+  axios.get(`https://www.reddit.com/user/${req.params.username}/comments.json?t=all&limit=100&sort=new`)
+    .then(resp => {
+      let rawComments = resp.data.data.children;
+      let cleanedComments = rawComments.map(comment => ({
+        content: comment.data.body,
+        contenttype: 'text/plain',
+        language: 'en',
+        id: comment.data.id
+      }));
+      sendPersonality(res, cleanedComments);
+    })
+    .catch(error => {
+      console.log(error);
+    });
+});
+
+const getTweetsFromUser = (res, user, receivedTweets, lastId, count) => {
+  if (count <= 0) {
+    let cleanedTweets = utils.cleanTweets(receivedTweets);
+    sendPersonality(res, cleanedTweets);
+    return;
+  }
+  let params;
+  if (lastId) {
+    params = {
+      screen_name: user,
+      include_rts: false,
+      max_id: lastId
+    }
+  }
+  else {
+    params = {
+      screen_name: user,
+      include_rts: false
+    }
+  }
+  client.get(
+    'statuses/user_timeline',
+    params,
+    (err, tweets, response) => {
+      if (err) {
+        console.log(`error: ${JSON.stringify(err)}`);
+        res.send({
+          error: "User not found"
+        });
+      }
+      else {
+        let tweetsResult = [...receivedTweets, ...tweets];
+        let lastId = tweetsResult[tweetsResult.length-1].id;
+        getTweetsFromUser(res, user, tweetsResult, lastId, count - 1);
+      }
+    }
+  );
+};
 
 const sendTweetsFromUser = (res, user) => {
   client.get(

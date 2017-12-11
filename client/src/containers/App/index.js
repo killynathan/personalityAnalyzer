@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import icon from './icon.svg';
 import loading from './loading.svg';
 import './App.css';
-import { getTwitterPersonality } from './utils/apiCalls';
+import { getTwitterPersonality, getRedditPersonality } from './utils/apiCalls';
 import UserInputForm from '../../components/UserInputForm';
 import PersonalityPortrait from '../../components/PersonalityPortrait/index.js';
 
@@ -17,11 +17,19 @@ class App extends Component {
     };
     this.state = {
       currentState: this.stateNames.NO_DATA,
+      mode: 'twitter',
       data: null
     };
 
     this.onComplete = this.onComplete.bind(this);
-    this.onTwitterSubmit = this.onTwitterSubmit.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+    this.changeMode = this.changeMode.bind(this);
+  }
+
+  changeMode(mode) {
+    this.setState({
+      mode: mode
+    });
   }
 
   onComplete(_data) {
@@ -39,11 +47,16 @@ class App extends Component {
     }
   }
 
-  onTwitterSubmit(username) {
+  onSubmit(username) {
     this.setState({
       currentState: this.stateNames.LOADING
     });
-    getTwitterPersonality(username, this.onComplete);
+    if (this.state.currentState === 'twitter') {
+      getTwitterPersonality(username, this.onComplete);
+    }
+    else {
+      getRedditPersonality(username, this.onComplete);
+    }
   }
 
   render() {
@@ -52,11 +65,16 @@ class App extends Component {
         <div className="App-introContainer">
           <img src={icon} />
           <p className="App-title">Personality.ai</p>
-          <p className="App-subTitle">Powered by IBM Watson</p>
+          <p className="App-subTitle">
+            Enter the social media profile (Twitter, Reddit) of a person you want to analyze, and we will give
+            you a detailed personality summary. Powered by IBM Watson.
+          </p>
           <UserInputForm
-            name='Enter username of Twitter accout you want to analyze:'
-            placeholder='Enter username of Twitter accout you want to analyze'
-            onSubmit={this.onTwitterSubmit}
+            name='Enter username of Twitter account you want to analyze:'
+            placeholder='username'
+            mode={this.state.mode}
+            onSubmit={this.onSubmit}
+            onChangeMode={this.changeMode}
           />
         </div>
         {this.state.currentState === this.stateNames.LOADING &&
