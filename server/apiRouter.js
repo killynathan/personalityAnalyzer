@@ -53,7 +53,11 @@ apiRouter.get('/reddit/:username', (req, res) => {
       sendPersonality(res, cleanedData);
     })
     .catch(error => {
-      console.log(error);
+      // console.log(error.response.data);
+      // console.log(`error in get reddit profile: ${JSON.stringify(error)}`);
+      res.send({
+        error: "User not found"
+      });
     });
 });
 

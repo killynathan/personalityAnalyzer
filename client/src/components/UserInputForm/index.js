@@ -4,15 +4,14 @@ import searchIcon from './magnify.svg';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 
-const UserInputForm = ({ name, placeholder, mode, onSubmit, onChangeMode }) => {
+const UserInputForm = ({ name, placeholder, onSubmit }) => {
   let userInput;
-  const onChangeModeHelper = sel => {
-    onChangeMode(sel.value);
-  };
+  let select;
+  
   return (
     <div>
       {/* <p>{name}</p> */}
-      <form onSubmit={(e) => {e.preventDefault(); onSubmit(userInput.value);}}>
+      <form onSubmit={(e) => {e.preventDefault(); onSubmit(userInput.value, select.value);}}>
         <div className='UserInputForm-inputContainer'>
           <input
             type="text"
@@ -24,7 +23,10 @@ const UserInputForm = ({ name, placeholder, mode, onSubmit, onChangeMode }) => {
             src={searchIcon}
             className="UserInputForm-searchIcon"
           />
-          <select className="UserInputForm-select" onChange={()=>{onChangeModeHelper(this)}} value={mode}>
+          <select
+            className="UserInputForm-select"
+            ref={elem => select = elem}
+          >
             <option className="UserInputForm-option" value="twitter">Twitter</option>
             <option className="UserInputForm-option" value="reddit">Reddit</option>
           </select>

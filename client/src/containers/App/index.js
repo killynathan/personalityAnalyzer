@@ -18,20 +18,12 @@ class App extends Component {
     this.state = {
       currentState: this.stateNames.NO_DATA,
       currentUser: null,
-      mode: 'twitter',
-      data: null
+      data: null,
+      dataType: null //'twttiter' of 'reddit'
     };
 
     this.onComplete = this.onComplete.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
-    this.changeMode = this.changeMode.bind(this);
-  }
-
-  changeMode(mode) {
-    alert(mode);
-    this.setState({
-      mode: mode
-    });
   }
 
   onComplete(_data, username) {
@@ -50,11 +42,12 @@ class App extends Component {
     }
   }
 
-  onSubmit(username) {
+  onSubmit(username, datatype) {
     this.setState({
-      currentState: this.stateNames.LOADING
+      currentState: this.stateNames.LOADING,
+      datatype: datatype
     });
-    if (this.state.mode === 'twitter') {
+    if (datatype === 'twitter') {
       getTwitterPersonality(username, this.onComplete);
     }
     else {
@@ -75,9 +68,7 @@ class App extends Component {
           <UserInputForm
             name='Enter username of Twitter account you want to analyze:'
             placeholder='username'
-            mode={this.state.mode}
             onSubmit={this.onSubmit}
-            onChangeMode={this.changeMode}
           />
         </div>
         {this.state.currentState === this.stateNames.LOADING &&
@@ -86,7 +77,7 @@ class App extends Component {
         {this.state.currentState === this.stateNames.RECEIVED_DATA &&
           <PersonalityPortrait
             personalityData={this.state.data}
-            username={`${this.state.mode === 'twitter' ? '@' : '/u/'}${this.state.currentUser}`}
+            username={`${this.state.datatype === 'twitter' ? '@' : '/u/'}${this.state.currentUser}`}
           />
         }
         {
