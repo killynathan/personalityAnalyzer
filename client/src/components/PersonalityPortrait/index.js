@@ -3,9 +3,9 @@ import TraitList from './TraitList';
 import { Grid, Row, Col } from 'react-bootstrap';
 import "./PersonalityPortrait.css";
 
-const PersonalityPortrait = ({ personalityData }) => (
+const PersonalityPortrait = ({ personalityData, username }) => (
   <div>
-    <p className="PersonalityPortrait-title">Personality Portrait</p>
+    <p className="PersonalityPortrait-title">{`Personality Portrait of ${username}`}</p>
     <Grid>
       <Row>
         <Col xs={12}>

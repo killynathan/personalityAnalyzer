@@ -17,6 +17,7 @@ class App extends Component {
     };
     this.state = {
       currentState: this.stateNames.NO_DATA,
+      currentUser: null,
       mode: 'twitter',
       data: null
     };
@@ -27,12 +28,13 @@ class App extends Component {
   }
 
   changeMode(mode) {
+    alert(mode);
     this.setState({
       mode: mode
     });
   }
 
-  onComplete(_data) {
+  onComplete(_data, username) {
     if (_data.error) {
       this.setState({
         currentState: this.stateNames.ERROR,
@@ -42,7 +44,8 @@ class App extends Component {
     else {
       this.setState({
         currentState: this.stateNames.RECEIVED_DATA,
-        data: _data
+        data: _data,
+        currentUser: username
       });
     }
   }
@@ -51,7 +54,7 @@ class App extends Component {
     this.setState({
       currentState: this.stateNames.LOADING
     });
-    if (this.state.currentState === 'twitter') {
+    if (this.state.mode === 'twitter') {
       getTwitterPersonality(username, this.onComplete);
     }
     else {
@@ -83,6 +86,7 @@ class App extends Component {
         {this.state.currentState === this.stateNames.RECEIVED_DATA &&
           <PersonalityPortrait
             personalityData={this.state.data}
+            username={`${this.state.mode === 'twitter' ? '@' : '/u/'}${this.state.currentUser}`}
           />
         }
         {
