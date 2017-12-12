@@ -6,6 +6,9 @@ import 'react-select/dist/react-select.css';
 
 const UserInputForm = ({ name, placeholder, mode, onSubmit, onChangeMode }) => {
   let userInput;
+  const onChangeModeHelper = sel => {
+    onChangeMode(sel.value);
+  };
   return (
     <div>
       {/* <p>{name}</p> */}
@@ -21,7 +24,7 @@ const UserInputForm = ({ name, placeholder, mode, onSubmit, onChangeMode }) => {
             src={searchIcon}
             className="UserInputForm-searchIcon"
           />
-          <select className="UserInputForm-select" onChange={(sel) => {onChangeMode(sel.value);}} value={mode}>
+          <select className="UserInputForm-select" onChange={()=>{onChangeModeHelper(this)}} value={mode}>
             <option className="UserInputForm-option" value="twitter">Twitter</option>
             <option className="UserInputForm-option" value="reddit">Reddit</option>
           </select>

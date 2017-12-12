@@ -27,6 +27,20 @@ const client = new Twitter({
   bearer_token: constants.TWITTER_BEARER_TOKEN
 });
 
+// apiRouter.get('/reddit/test/:username', (req, res) => {
+//   axios.get(`https://www.reddit.com/user/${req.params.username}/comments.json?t=all&limit=100&sort=new`)
+//     .then(resp => {
+//       let rawComments = resp.data.data.children;
+//       let cleanedComments = rawComments.map(comment => (
+//         utils.cleanRedditComment(comment.data.body)
+//       ));
+//       res.send(cleanedComments);
+//     })
+//     .catch(error => {
+//       console.log(error);
+//     });
+// });
+
 apiRouter.get('/twitter/:username', (req, res) => {
   // sendTweetsFromUser(res, req.params.username);
   getTweetsFromUser(res, req.params.username, [], null, 10);
@@ -35,14 +49,8 @@ apiRouter.get('/twitter/:username', (req, res) => {
 apiRouter.get('/reddit/:username', (req, res) => {
   axios.get(`https://www.reddit.com/user/${req.params.username}/comments.json?t=all&limit=100&sort=new`)
     .then(resp => {
-      let rawComments = resp.data.data.children;
-      let cleanedComments = rawComments.map(comment => ({
-        content: comment.data.body,
-        contenttype: 'text/plain',
-        language: 'en',
-        id: comment.data.id
-      }));
-      sendPersonality(res, cleanedComments);
+      let cleanedData = utils.cleanRedditUserData(resp.data);
+      sendPersonality(res, cleanedData);
     })
     .catch(error => {
       console.log(error);
@@ -88,62 +96,6 @@ const getTweetsFromUser = (res, user, receivedTweets, lastId, count) => {
   );
 };
 
-const sendTweetsFromUser = (res, user) => {
-  client.get(
-    'statuses/user_timeline',
-    {
-      screen_name: user,
-      include_rts: false
-    },
-    (err, tweets, response) => {
-      if (err) {
-        console.log(`error: ${JSON.stringify(err)}`);
-        res.send({
-          error: "User not found"
-        });
-      }
-      else {
-        let tweetsResult = tweets;
-        let lastId = tweetsResult[tweetsResult.length-1].id;
-
-        client.get(
-          'statuses/user_timeline',
-          {
-            screen_name: user,
-            include_rts: false,
-            max_id: lastId
-          },
-          (err, tweets, response) => {
-            if (err) console.log(`error: ${err}`);
-            else {
-              tweetsResult = [...tweetsResult, ...tweets];
-              let lastId = tweetsResult[tweetsResult.length-1].id;
-
-              client.get(
-                'statuses/user_timeline',
-                {
-                  screen_name: user,
-                  include_rts: false,
-                  max_id: lastId
-                },
-                (err, tweets, response) => {
-                  if (err) console.log(`error: ${err}`);
-                  else {
-                    tweetsResult = [...tweetsResult, ...tweets];
-                    let lastId = tweetsResult[tweetsResult.length-1].id;
-
-                    // res.send(JSON.stringify(utils.cleanTweets(tweetsResult), null, 2));
-                    let cleanedTweets = utils.cleanTweets(tweetsResult);
-                    // res.send(JSON.stringify(cleanedTweets));
-                    sendPersonality(res, cleanedTweets);
-                  }
-              });
-            }
-        });
-      }
-    });
-}
-//res.send(JSON.stringify(utils.cleanTweets(tweets), null, 2));
 const sendPersonality = (res, data) => {
   let params = {
     content_items: data,
@@ -155,7 +107,7 @@ const sendPersonality = (res, data) => {
     }
   };
   personality_insights.profile(params, (err, response) => {
-      if (err) console.log(`error: ${err}`);
+      if (err) console.log(`error in personality_insights: ${err}`);
       else res.send(JSON.stringify(response, null, 2));
     }
   )

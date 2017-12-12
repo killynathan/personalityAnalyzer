@@ -9,7 +9,7 @@ export const getTwitterPersonality = (username, onComplete) => {
       return res.json();
     })
     .then(data => {
-      onComplete(data);
+      onComplete(data, username);
       return;
     });
 }
@@ -25,7 +25,7 @@ export const getRedditPersonality = (username, onComplete) => {
       return res.json();
     })
     .then(data => {
-      onComplete(data);
+      onComplete(data, username);
       return;
     });
 }
